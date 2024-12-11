@@ -1,0 +1,36 @@
+version: '3.8'
+
+services:
+  app:
+    image: node:18-alpine  # Use a lightweight Node.js image
+    container_name: app_container
+    working_dir: /usr/src/app
+    volumes:
+      - .:/usr/src/app
+    ports:
+      - "3000:3000"  # Map port 3000 on the host to port 3000 in the container
+    environment:
+      - NODE_ENV=development
+      - DB_HOST=db
+      - DB_PORT=5432
+      - DB_USER=postgres
+      - DB_PASSWORD=example
+      - DB_NAME=app_db
+    depends_on:
+      - db
+    command: ["sh", "-c", "npm install && npm run dev"]
+
+  db:
+    image: postgres:15-alpine  # Use a lightweight PostgreSQL image
+    container_name: db_container
+    ports:
+      - "5432:5432"  # Map port 5432 on the host to port 5432 in the container
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=example
+      - POSTGRES_DB=app_db
+    volumes:
+      - db_data:/var/lib/postgresql/data
+
+volumes:
+  db_data:  # Persistent volume for database storage

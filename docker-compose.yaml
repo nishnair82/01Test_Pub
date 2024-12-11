@@ -1,0 +1,47 @@
+version: '3.8'
+
+services:
+  superveda:
+    hostname: superveda
+    build:
+      context: superveda/
+      # platforms:
+      #   - "linux/amd64"
+    restart: on-failure
+    environment:
+      - "DB_HOSTNAME=mysql"
+      - "DB_USER=superveda"
+      - "DB_PASSWORD=password"
+      - "DB_PORT=3306"
+      - "DB_NAME=superveda_db"
+      - "DB_TYPE=mysql"
+    ports:
+      - "8105:8080"
+    networks:
+      - mysql
+    depends_on:
+      - mysql
+
+  mysql:
+    build:
+      context: mysql/
+      args:
+        MARIADB_VERSION: $MARIADB_VERSION
+        MARIADB_ROOT_PASSWORD: $PASSWORD
+    restart: on-failure
+    environment:
+      MYSQL_ROOT_PASSWORD: $PASSWORD
+    volumes:
+      - mysql_data:/var/lib/mysql
+    ports:
+      - "3306:3306"
+    networks:
+      - mysql
+
+volumes:
+  mysql_data:
+
+networks:
+  mysql:
+    driver: bridge   
+  
