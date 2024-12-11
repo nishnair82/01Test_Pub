@@ -11,7 +11,7 @@ services:
     environment:
       - "DB_HOSTNAME=mysql"
       - "DB_USER=superveda"
-      - "DB_PASSWORD=password"
+      - "DB_PASSWORD= $PASSWORD"
       - "DB_PORT=3306"
       - "DB_NAME=superveda_db"
       - "DB_TYPE=mysql"
